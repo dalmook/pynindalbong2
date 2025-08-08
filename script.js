@@ -23,7 +23,7 @@ async function translate(text) {
 }
 
 // 히스토리 추가 함수
-def addHistory(input, formatted) {
+function addHistory(input, formatted) {
   history.push({ input, formatted });
   const li = document.createElement('li');
   li.textContent = input.length < 30 ? input : input.slice(0, 27) + '...';
@@ -49,11 +49,11 @@ async function processText() {
     const py = pinyin(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
     html += `<p>${orig}<br>` +
-            `<span class=\"pinyin\">[병음] ${py}</span><br>` +
-            `<span class=\"meaning\">[뜻] ${ko}</span></p>`;
+            `<span class="pinyin">[병음] ${py}</span><br>` +
+            `<span class="meaning">[뜻] ${ko}</span></p>`;
   }
   outputEl.innerHTML = html;
-  addHistory(inputEl.value.trim(), html);
+  addHistory(raw, html);
 }
 
 // 이벤트 바인딩
