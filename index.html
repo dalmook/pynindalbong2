@@ -5,28 +5,34 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>중문 변환기</title>
   <link rel="icon" href="data:;base64,=">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
+  <header>
     <h1>중문 간체 변환기</h1>
-    <textarea id="inputText" placeholder="간체 중국어 입력..."></textarea>
-    <div class="buttons">
-      <button id="convertBtn">변환</button>
-      <button id="copyBtn">클립보드 복사</button>
-    </div>
-    <div class="main">
+  </header>
+  <main class="container">
+    <section class="input-section">
+      <textarea id="inputText" placeholder="간체 중국어 입력..."></textarea>
+      <div class="buttons">
+        <button id="convertBtn">변환</button>
+        <button id="copyBtn">클립보드 복사</button>
+      </div>
+    </section>
+    <section class="output-section">
       <div class="result">
         <h2>변환 결과</h2>
         <div id="output"></div>
       </div>
-      <div class="history">
+      <aside class="history">
         <h2>히스토리</h2>
         <ul id="historyList"></ul>
-      </div>
-    </div>
-  </div>
-  <!-- pinyin-pro UMD (window.pinyinPro) -->
+      </aside>
+    </section>
+  </main>
+  <!-- pinyin-pro UMD -->
   <script src="https://unpkg.com/pinyin-pro@3.26.0/dist/index.js"></script>
   <!-- 메인 로직 -->
   <script src="script.js"></script>
