@@ -40,7 +40,8 @@ async function process() {
   let html = '';
   for (const sent of sentences) {
     const orig = sent + '。';
-    const py = pinyinPro(orig, { toneType: 'symbol' });
+    // pinyin-pro 전역 함수 사용
+    const py = window.pinyinPro(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
     html += `<p>${orig}<br>`+
             `<span class="pinyin">[병음] ${py}</span><br>`+
