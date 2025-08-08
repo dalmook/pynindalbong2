@@ -7,39 +7,29 @@ const convertBtn = document.getElementById('convertBtn');
 const copyBtn = document.getElementById('copyBtn');
 let history = [];
 
-// 저장된 히스토리 불러오기 (최신 순 유지)
+// 저장된 히스토리 불러오기 (최신 50개 유지)
 function loadHistory() {
   const saved = localStorage.getItem('history');
   if (saved) {
-    history = JSON.parse(saved);
+    history = JSON.parse(saved).slice(0,50);
     history.forEach(item => renderHistoryItem(item));
   }
 }
 
 // 히스토리 렌더링
-function renderHistoryItem(record) {
-  const { input, formatted } = record;
+function renderHistoryItem({ input, formatted }) {
   const li = document.createElement('li');
-  li.innerHTML = `<span class=\"text\">${input.length < 30 ? input : input.slice(0,27) + '...'}</span><button class=\"delete-btn\">×</button>`;
-  li.addEventListener('click', e => {
-    if (e.target.classList.contains('delete-btn')) return;
+  li.textContent = input.length < 30 ? input : input.slice(0,27) + '...';
+  li.addEventListener('click', () => {
     inputEl.value = input;
     outputEl.innerHTML = formatted;
   });
-  // 삭제 버튼
-  li.querySelector('.delete-btn').addEventListener('click', e => {
-    e.stopPropagation();
-    // history 배열에서 삭제
-    history = history.filter(h => !(h.input === input && h.formatted === formatted));
-    saveHistory();
-    li.remove();
-  });
-  historyEl.prepend(li);
+  historyEl.append(li);
 }
 
 // 히스토리 저장
 function saveHistory() {
-  localStorage.setItem('history', JSON.stringify(history));
+  localStorage.setItem('history', JSON.stringify(history.slice(0,50)));
 }
 
 // 번역: Google Translate 비공식 gtx API + 사전 데이터 활용
@@ -56,13 +46,11 @@ async function translate(text) {
 
 // 변환 처리
 async function processText() {
-  // 변환 중 버튼 비활성화
   convertBtn.disabled = true;
   convertBtn.textContent = '변환 중...';
 
   let raw = inputEl.value.trim();
-  if (!raw) { alert('간체 중국어 문장을 입력해주세요.'); }
-  else {
+  if (raw) {
     if (!raw.endsWith('。')) raw += '。';
     const sentences = raw.split('。').filter(s => s.trim());
     let html = '';
@@ -70,24 +58,24 @@ async function processText() {
       const orig = sent + '。';
       const py = pinyin(orig, { toneType: 'symbol' });
       let ko = '';
-      try { ko = await translate(orig); } catch (e) { console.error(e); ko = '번역 오류'; }
+      try { ko = await translate(orig); } catch { ko = '번역 오류'; }
       html += `<div class="entry"><strong>${orig}</strong><span class="pinyin">${py}</span><span class="meaning">${ko}</span></div>`;
     }
     outputEl.innerHTML = html;
     const record = { input: raw, formatted: html };
     history.unshift(record);
+    if (history.length > 50) history.pop();
     renderHistoryItem(record);
     saveHistory();
+  } else {
+    alert('간체 중국어 문장을 입력해주세요.');
   }
 
-  // 변환 완료 후 버튼 활성화
   convertBtn.disabled = false;
   convertBtn.textContent = '변환';
 }
 
 // 이벤트 바인딩
-convertBtn.addEventListener('click', processText);
-copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(outputEl.innerText); alert('결과를 클립보드에 복사했습니다.'); });
 convertBtn.addEventListener('click', processText);
 copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(outputEl.innerText); alert('결과를 클립보드에 복사했습니다.'); });
 
