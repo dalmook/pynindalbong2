@@ -1,3 +1,5 @@
+import { pinyin } from 'https://unpkg.com/pinyin-pro/dist/pinyin-pro.esm.min.js';
+
 const inputEl = document.getElementById('inputText');
 const outputEl = document.getElementById('output');
 const historyEl = document.getElementById('historyList');
@@ -14,11 +16,11 @@ async function translate(text) {
   return json.translatedText || '';
 }
 
-// 변환 결과를 히스토리에 추가
+// 히스토리 추가
 function addHistory(input, formatted) {
   history.push({ input, formatted });
   const li = document.createElement('li');
-  li.textContent = input.length < 30 ? input : input.slice(0,27) + '...';
+  li.textContent = input.length < 30 ? input : input.slice(0, 27) + '...';
   li.addEventListener('click', () => {
     inputEl.value = input;
     outputEl.innerHTML = formatted;
@@ -26,7 +28,7 @@ function addHistory(input, formatted) {
   historyEl.prepend(li);
 }
 
-// 변환 처리 함수
+// 변환 처리
 async function processText() {
   let raw = inputEl.value.trim();
   if (!raw) return alert('간체 중국어 문장을 입력해주세요.');
@@ -35,8 +37,7 @@ async function processText() {
   let html = '';
   for (const sent of sentences) {
     const orig = sent + '。';
-    // UMD 전역 객체 PinyinPro 사용
-    const py = PinyinPro.pinyin(orig, { toneType: 'symbol' });
+    const py = pinyin(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
     html += `<p>${orig}<br>` +
             `<span class="pinyin">[병음] ${py}</span><br>` +
@@ -46,10 +47,9 @@ async function processText() {
   addHistory(inputEl.value.trim(), html);
 }
 
-// 이벤트 바인딩
-document.getElementById('convertBtn').addEventListener('click', processText);
-
-document.getElementById('copyBtn').addEventListener('click', () => {
+// 이벤트
+convertBtn.addEventListener('click', processText);
+copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(outputEl.innerText);
   alert('결과를 클립보드에 복사했습니다.');
 });
