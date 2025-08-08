@@ -43,6 +43,8 @@ button:hover { background: #0056b3; }
   overflow-y: auto;
 }
 #output p { margin: 10px 0; line-height: 1.5; }
+.result .pinyin { color: #555; font-style: italic; }
+.result .meaning { color: #333; }
 .history ul { list-style: none; padding: 0; }
 .history li {
   padding: 6px;
