@@ -4,11 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>중문 변환기</title>
-  <!-- 빈 favicon 설정 (404 방지) -->
   <link rel="icon" href="data:;base64,=">
   <link rel="stylesheet" href="styles.css">
-  <!-- pinyin-pro UMD 빌드 -->
-  <script src="https://unpkg.com/pinyin-pro/dist/pinyin-pro.umd.js"></script>
 </head>
 <body>
   <div class="container">
@@ -29,6 +26,7 @@
       </div>
     </div>
   </div>
-  <script src="script.js"></script>
+  <!-- ES Module 스크립트: pinyin-pro ESM + 메인 로직 -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
