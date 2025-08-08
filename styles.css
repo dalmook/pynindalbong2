@@ -64,19 +64,24 @@ button:hover { background: #357ab8; }
   overflow-y: auto;
 }
 .result h2 { margin-top: 0; }
-#output p {
-  margin: 0 0 1em 0;
-  line-height: 1.6;
+/* 항목별 포맷 */
+.result .entry {
+  margin-bottom: 1.5em;
 }
-.result p strong {
+.result .entry strong {
+  display: block;
   font-weight: 700;
+  margin-bottom: 0.5em;
 }
-.result .pinyin, .result .meaning {
-  display: inline;
-  margin: 0;
+.result .entry .pinyin {
+  display: block;
+  color: #6a6a6a;
 }
-.result .pinyin { color: #6a6a6a; }
-.result .meaning { margin-left: 1em; color: #4a4a4a; }
+.result .entry .meaning {
+  display: block;
+  color: #4a4a4a;
+  margin-top: 0.25em;
+}
 .history {
   flex: 1;
   background: #fff;
