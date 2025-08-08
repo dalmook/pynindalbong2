@@ -8,18 +8,16 @@ const convertBtn = document.getElementById('convertBtn');
 const copyBtn = document.getElementById('copyBtn');
 let history = [];
 
-// 번역: LibreTranslate 공식 무료 인스턴스 사용 (API 키 불필요, CORS 지원)
+// 번역: Google Translate 비공식 gtx API 사용 (무료, 키 불필요)
 async function translate(text) {
-  const res = await fetch('https://libretranslate.com/translate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ q: text, source: 'zh', target: 'ko', format: 'text' })
-  });
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&q=' + encodeURIComponent(text);
+  const res = await fetch(url);
   if (!res.ok) {
     throw new Error('번역 API 요청 실패: ' + res.status);
   }
   const data = await res.json();
-  return data.translatedText;
+  // JSON 구조: [[["번역결과",원문, ...],...],...]
+  return data[0][0][0] || '';
 }
 
 // 히스토리 추가 함수
@@ -47,7 +45,13 @@ async function processText() {
   for (const sent of sentences) {
     const orig = sent + '。';
     const py = pinyin(orig, { toneType: 'symbol' });
-    const ko = await translate(orig);
+    let ko = '';
+    try {
+      ko = await translate(orig);
+    } catch (e) {
+      ko = '번역 오류';
+      console.error(e);
+    }
     html += `<p>${orig}<br>` +
             `<span class="pinyin">[병음] ${py}</span><br>` +
             `<span class="meaning">[뜻] ${ko}</span></p>`;
