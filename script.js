@@ -1,4 +1,4 @@
-// 전역 pinyinPro 사용 (UMD via unpkg)
+// 전역 pinyin 함수 사용 (UMD via unpkg)
 const { pinyin } = window.pinyinPro;
 
 const inputEl = document.getElementById('inputText');
@@ -8,7 +8,6 @@ const convertBtn = document.getElementById('convertBtn');
 const copyBtn = document.getElementById('copyBtn');
 let history = [];
 
-// 번역: Argos Open Tech LibreTranslate 사용 (무료, API 키 불필요, CORS 지원)
 // 번역: LibreTranslate 공식 무료 인스턴스 사용 (API 키 불필요, CORS 지원)
 async function translate(text) {
   const res = await fetch('https://libretranslate.com/translate', {
@@ -19,15 +18,12 @@ async function translate(text) {
   if (!res.ok) {
     throw new Error('번역 API 요청 실패: ' + res.status);
   }
-  const json = await res.json();
-  return json.translatedText;
-}
-  const json = await res.json();
-  return json.translatedText;
+  const data = await res.json();
+  return data.translatedText;
 }
 
-// 히스토리 추가
-function addHistory(input, formatted) {
+// 히스토리 추가 함수
+def addHistory(input, formatted) {
   history.push({ input, formatted });
   const li = document.createElement('li');
   li.textContent = input.length < 30 ? input : input.slice(0, 27) + '...';
@@ -38,7 +34,7 @@ function addHistory(input, formatted) {
   historyEl.prepend(li);
 }
 
-// 변환 처리
+// 변환 처리 함수
 async function processText() {
   let raw = inputEl.value.trim();
   if (!raw) {
@@ -53,8 +49,8 @@ async function processText() {
     const py = pinyin(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
     html += `<p>${orig}<br>` +
-            `<span class="pinyin">[병음] ${py}</span><br>` +
-            `<span class="meaning">[뜻] ${ko}</span></p>`;
+            `<span class=\"pinyin\">[병음] ${py}</span><br>` +
+            `<span class=\"meaning\">[뜻] ${ko}</span></p>`;
   }
   outputEl.innerHTML = html;
   addHistory(inputEl.value.trim(), html);
