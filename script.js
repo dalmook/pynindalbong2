@@ -1,8 +1,11 @@
-import { pinyin } from 'https://unpkg.com/pinyin-pro/dist/pinyin-pro.esm.min.js';
+// pinyin-pro ESM 모듈을 jsDelivr에서 로드
+import { pinyin } from 'https://cdn.jsdelivr.net/npm/pinyin-pro/dist/pinyin-pro.esm.min.js';
 
 const inputEl = document.getElementById('inputText');
 const outputEl = document.getElementById('output');
 const historyEl = document.getElementById('historyList');
+const convertBtn = document.getElementById('convertBtn');
+const copyBtn = document.getElementById('copyBtn');
 let history = [];
 
 // 번역: LibreTranslate 공개 서버 사용 (무료, API 키 불필요)
@@ -47,7 +50,7 @@ async function processText() {
   addHistory(inputEl.value.trim(), html);
 }
 
-// 이벤트
+// 이벤트 바인딩
 convertBtn.addEventListener('click', processText);
 copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(outputEl.innerText);
