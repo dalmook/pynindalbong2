@@ -19,14 +19,7 @@ async function translate(text) {
     throw new Error('번역 API 요청 실패: ' + res.status);
   }
   const json = await res.json();
-  // Argos LibreTranslate 호환 응답 형식
   return json.translatedText;
-}
-  const data = await res.json();
-  return data.data.translations[0].translatedText;
-}
-  const json = await res.json();
-  return json.translatedText || '';
 }
 
 // 히스토리 추가
@@ -44,7 +37,10 @@ function addHistory(input, formatted) {
 // 변환 처리
 async function processText() {
   let raw = inputEl.value.trim();
-  if (!raw) return alert('간체 중국어 문장을 입력해주세요.');
+  if (!raw) {
+    alert('간체 중국어 문장을 입력해주세요.');
+    return;
+  }
   if (!raw.endsWith('。')) raw += '。';
   const sentences = raw.split('。').filter(s => s.trim());
   let html = '';
