@@ -18,20 +18,7 @@ button:hover { background: #357ab8; }
 .history { flex: 1; background: #fff; padding: 16px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); max-height: 60vh; overflow-y: auto; }
 .history h2 { margin-top: 0; font-size: 1.1rem; }
 .history ul { list-style: none; padding: 0; margin: 0; }
-.history li { position: relative; padding: 8px 32px 8px 8px; border-bottom: 1px solid #e1e1e1; cursor: pointer; transition: background 0.2s; }
+.history li { padding: 8px; border-bottom: 1px solid #e1e1e1; cursor: pointer; transition: background 0.2s; }
 .history li:hover { background: #eef6ff; }
-.history .delete-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; color: #c00; font-size: 14px; cursor: pointer; }
-footer { text-align: center; padding: 12px 0; background: #fff; font-size: 0.9rem; color: #666; box-shadow: 0 -1px 4px rgba(0,0,0,0.05); margin-top: 16px; }
-
-/* 반응형 */
-@media (max-width: 768px) {
-  .output-section { flex-direction: column; }
-  .buttons { text-align: center; }
-  button { width: 48%; margin: 4px 1%; }
-}
-@media (max-width: 480px) {
-  header h1 { font-size: 1.5rem; }
-  button { width: 100%; margin: 6px 0; }
-  .container { padding: 0 8px; }
-  textarea { height: 100px; }
-}
+@media (max-width: 768px) { .output-section { flex-direction: column; } .buttons { text-align: center; } button { width: 48%; margin: 4px 1%; } }
+@media (max-width: 480px) { header h1 { font-size: 1.5rem; } button { width: 100%; margin: 6px 0; } .container { padding: 0 8px; } textarea { height: 100px; } }
