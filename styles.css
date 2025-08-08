@@ -1,6 +1,4 @@
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 body {
   font-family: 'Noto Sans KR', sans-serif;
   background: #f0f4f8;
@@ -51,9 +49,7 @@ button {
   cursor: pointer;
   transition: background 0.3s;
 }
-button:hover {
-  background: #357ab8;
-}
+button:hover { background: #357ab8; }
 .output-section {
   display: flex;
   gap: 20px;
@@ -67,23 +63,24 @@ button:hover {
   max-height: 500px;
   overflow-y: auto;
 }
-.result h2 {
-  margin-top: 0;
-}
+.result h2 { margin-top: 0; }
 #output p {
-  margin: 12px 0;
+  margin: 0 0 1em 0;
   line-height: 1.6;
 }
+.result p strong {
+  font-weight: 700;
+}
+.result .pinyin, .result .meaning {
+  display: inline;
+  margin: 0;
+}
 .result .pinyin {
-  display: block;
-  margin-top: 4px;
-  color: #555;
-  font-style: italic;
+  color: #6a6a6a;
 }
 .result .meaning {
-  display: block;
-  margin-top: 2px;
-  color: #333;
+  margin-left: 1em;
+  color: #4a4a4a;
 }
 .history {
   flex: 1;
@@ -94,20 +91,12 @@ button:hover {
   max-height: 500px;
   overflow-y: auto;
 }
-.history h2 {
-  margin-top: 0;
-}
-.history ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+.history h2 { margin-top: 0; }
+.history ul { list-style: none; padding: 0; margin: 0; }
 .history li {
   padding: 10px;
   border-bottom: 1px solid #e1e1e1;
   cursor: pointer;
   transition: background 0.2s;
 }
-.history li:hover {
-  background: #eef6ff;
-}
+.history li:hover { background: #eef6ff; }
