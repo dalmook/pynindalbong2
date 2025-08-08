@@ -57,8 +57,7 @@ async function processText() {
     const py = pinyin(orig, { toneType: 'symbol' });
     let ko = '';
     try { ko = await translate(orig); } catch (e) { console.error(e); ko = '번역 오류'; }
-    html += `<p><strong>${orig}</strong><br>` +
-            `<span class="pinyin">[병음] ${py}</span><span class="meaning">[뜻] ${ko}</span></p>`;
+    html += `<div class=\"entry\"><strong>${orig}</strong><span class=\"pinyin\">${py}</span><span class=\"meaning\">${ko}</span></div>`;
   }
   outputEl.innerHTML = html;
   const record = { input: raw, formatted: html };
