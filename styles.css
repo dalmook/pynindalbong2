@@ -21,7 +21,9 @@ textarea {
   border-radius: 4px;
   resize: vertical;
 }
-.buttons { margin: 10px 0; }
+.buttons {
+  margin: 10px 0;
+}
 button {
   padding: 8px 16px;
   margin-right: 10px;
@@ -31,9 +33,15 @@ button {
   border-radius: 4px;
   cursor: pointer;
 }
-button:hover { background: #0056b3; }
-.main { display: flex; gap: 20px; }
-.result, .history {
+button:hover {
+  background: #0056b3;
+}
+.main {
+  display: flex;
+  gap: 20px;
+}
+.result,
+.history {
   flex: 1;
   background: #fafafa;
   padding: 10px;
@@ -42,13 +50,26 @@ button:hover { background: #0056b3; }
   max-height: 400px;
   overflow-y: auto;
 }
-#output p { margin: 10px 0; line-height: 1.5; }
-.result .pinyin { color: #555; font-style: italic; }
-.result .meaning { color: #333; }
-.history ul { list-style: none; padding: 0; }
+#output p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+.result .pinyin {
+  color: #555;
+  font-style: italic;
+}
+.result .meaning {
+  color: #333;
+}
+.history ul {
+  list-style: none;
+  padding: 0;
+}
 .history li {
   padding: 6px;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
 }
-.history li:hover { background: #eef; }
+.history li:hover {
+  background: #eef;
+}
