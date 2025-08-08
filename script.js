@@ -1,6 +1,5 @@
 // 전역 pinyin 함수 사용 (UMD via unpkg)
 const { pinyin } = window.pinyinPro;
-
 const inputEl = document.getElementById('inputText');
 const outputEl = document.getElementById('output');
 const historyEl = document.getElementById('historyList');
@@ -18,12 +17,22 @@ function loadHistory() {
 }
 
 // 히스토리 렌더링
-function renderHistoryItem({ input, formatted }) {
+function renderHistoryItem(record) {
+  const { input, formatted } = record;
   const li = document.createElement('li');
-  li.textContent = input.length < 30 ? input : input.slice(0, 27) + '...';
-  li.addEventListener('click', () => {
+  li.innerHTML = `<span class=\"text\">${input.length < 30 ? input : input.slice(0,27) + '...'}</span><button class=\"delete-btn\">×</button>`;
+  li.addEventListener('click', e => {
+    if (e.target.classList.contains('delete-btn')) return;
     inputEl.value = input;
     outputEl.innerHTML = formatted;
+  });
+  // 삭제 버튼
+  li.querySelector('.delete-btn').addEventListener('click', e => {
+    e.stopPropagation();
+    // history 배열에서 삭제
+    history = history.filter(h => !(h.input === input && h.formatted === formatted));
+    saveHistory();
+    li.remove();
   });
   historyEl.prepend(li);
 }
@@ -47,26 +56,38 @@ async function translate(text) {
 
 // 변환 처리
 async function processText() {
+  // 변환 중 버튼 비활성화
+  convertBtn.disabled = true;
+  convertBtn.textContent = '변환 중...';
+
   let raw = inputEl.value.trim();
-  if (!raw) { alert('간체 중국어 문장을 입력해주세요.'); return; }
-  if (!raw.endsWith('。')) raw += '。';
-  const sentences = raw.split('。').filter(s => s.trim());
-  let html = '';
-  for (const sent of sentences) {
-    const orig = sent + '。';
-    const py = pinyin(orig, { toneType: 'symbol' });
-    let ko = '';
-    try { ko = await translate(orig); } catch (e) { console.error(e); ko = '번역 오류'; }
-    html += `<div class=\"entry\"><strong>${orig}</strong><span class=\"pinyin\">${py}</span><span class=\"meaning\">${ko}</span></div>`;
+  if (!raw) { alert('간체 중국어 문장을 입력해주세요.'); }
+  else {
+    if (!raw.endsWith('。')) raw += '。';
+    const sentences = raw.split('。').filter(s => s.trim());
+    let html = '';
+    for (const sent of sentences) {
+      const orig = sent + '。';
+      const py = pinyin(orig, { toneType: 'symbol' });
+      let ko = '';
+      try { ko = await translate(orig); } catch (e) { console.error(e); ko = '번역 오류'; }
+      html += `<div class="entry"><strong>${orig}</strong><span class="pinyin">${py}</span><span class="meaning">${ko}</span></div>`;
+    }
+    outputEl.innerHTML = html;
+    const record = { input: raw, formatted: html };
+    history.unshift(record);
+    renderHistoryItem(record);
+    saveHistory();
   }
-  outputEl.innerHTML = html;
-  const record = { input: raw, formatted: html };
-  history.unshift(record);
-  renderHistoryItem(record);
-  saveHistory();
+
+  // 변환 완료 후 버튼 활성화
+  convertBtn.disabled = false;
+  convertBtn.textContent = '변환';
 }
 
 // 이벤트 바인딩
+convertBtn.addEventListener('click', processText);
+copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(outputEl.innerText); alert('결과를 클립보드에 복사했습니다.'); });
 convertBtn.addEventListener('click', processText);
 copyBtn.addEventListener('click', () => { navigator.clipboard.writeText(outputEl.innerText); alert('결과를 클립보드에 복사했습니다.'); });
 
