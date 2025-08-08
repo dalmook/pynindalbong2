@@ -1,5 +1,5 @@
-// pinyin-pro ESM 모듈을 jsDelivr에서 로드
-import { pinyin } from 'https://cdn.jsdelivr.net/npm/pinyin-pro/dist/pinyin-pro.esm.min.js';
+// 전역 pinyinPro 사용 (UMD via unpkg)
+const { pinyin } = window.pinyinPro;
 
 const inputEl = document.getElementById('inputText');
 const outputEl = document.getElementById('output');
