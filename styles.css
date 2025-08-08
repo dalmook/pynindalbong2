@@ -75,13 +75,8 @@ button:hover { background: #357ab8; }
   display: inline;
   margin: 0;
 }
-.result .pinyin {
-  color: #6a6a6a;
-}
-.result .meaning {
-  margin-left: 1em;
-  color: #4a4a4a;
-}
+.result .pinyin { color: #6a6a6a; }
+.result .meaning { margin-left: 1em; color: #4a4a4a; }
 .history {
   flex: 1;
   background: #fff;
