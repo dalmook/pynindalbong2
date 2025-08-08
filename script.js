@@ -3,24 +3,18 @@ const outputEl = document.getElementById('output');
 const historyEl = document.getElementById('historyList');
 let history = [];
 
-// Papago API 설정 (클라이언트에서 사용 시 CORS 프록시 필요)
-const PAPAGO_ID = 'YOUR_CLIENT_ID';
-const PAPAGO_SECRET = 'YOUR_CLIENT_SECRET';
-
+// 번역: LibreTranslate 공개 서버 사용 (무료, API 키 불필요)
 async function translate(text) {
-  const res = await fetch('https://openapi.naver.com/v1/papago/n2mt', {
+  const res = await fetch('https://libretranslate.de/translate', {
     method: 'POST',
-    headers: {
-      'X-Naver-Client-Id': PAPAGO_ID,
-      'X-Naver-Client-Secret': PAPAGO_SECRET,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({ source: 'zh-CN', target: 'ko', text })
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ q: text, source: 'zh', target: 'ko', format: 'text' })
   });
   const json = await res.json();
-  return json.message?.result.translatedText || '';
+  return json.translatedText || '';
 }
 
+// 변환 결과를 히스토리에 추가
 function addHistory(input, formatted) {
   history.push({ input, formatted });
   const li = document.createElement('li');
@@ -32,7 +26,8 @@ function addHistory(input, formatted) {
   historyEl.prepend(li);
 }
 
-async function process() {
+// 변환 처리 함수
+async function processText() {
   let raw = inputEl.value.trim();
   if (!raw) return alert('간체 중국어 문장을 입력해주세요.');
   if (!raw.endsWith('。')) raw += '。';
@@ -40,18 +35,19 @@ async function process() {
   let html = '';
   for (const sent of sentences) {
     const orig = sent + '。';
-    // pinyin-pro 전역 함수 사용
     const py = window.pinyinPro(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
-    html += `<p>${orig}<br>`+
-            `<span class="pinyin">[병음] ${py}</span><br>`+
+    html += `<p>${orig}<br>` +
+            `<span class="pinyin">[병음] ${py}</span><br>` +
             `<span class="meaning">[뜻] ${ko}</span></p>`;
   }
   outputEl.innerHTML = html;
   addHistory(inputEl.value.trim(), html);
 }
 
-document.getElementById('convertBtn').onclick = process;
+// 이벤트 바인딩
+document.getElementById('convertBtn').onclick = processText;
+
 document.getElementById('copyBtn').onclick = () => {
   const txt = outputEl.innerText;
   navigator.clipboard.writeText(txt);
