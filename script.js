@@ -9,11 +9,12 @@ const copyBtn = document.getElementById('copyBtn');
 
 let history = [];
 
-// 저장된 히스토리 불러오기
+// 저장된 히스토리 불러오기 (최신 순 유지)
 function loadHistory() {
   const saved = localStorage.getItem('history');
   if (saved) {
     history = JSON.parse(saved);
+    // history 배열은 최신 기록이 맨 앞에 저장되어 있음
     history.forEach(item => renderHistoryItem(item));
   }
 }
