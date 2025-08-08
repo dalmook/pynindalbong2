@@ -35,8 +35,8 @@ async function processText() {
   let html = '';
   for (const sent of sentences) {
     const orig = sent + '。';
-    // UMD 전역 객체 사용하는 방식으로 변경
-    const py = PinyinPro.pinyin(orig, { toneType: 'symbol' });
+    // 전역 함수 pinyinPro 사용
+    const py = window.pinyinPro(orig, { toneType: 'symbol' });
     const ko = await translate(orig);
     html += `<p>${orig}<br>` +
             `<span class="pinyin">[병음] ${py}</span><br>` +
@@ -47,6 +47,13 @@ async function processText() {
 }
 
 // 이벤트 바인딩
+document.getElementById('convertBtn').addEventListener('click', processText);
+
+document.getElementById('copyBtn').addEventListener('click', () => {
+  const txt = outputEl.innerText;
+  navigator.clipboard.writeText(txt);
+  alert('결과를 클립보드에 복사했습니다.');
+});
 document.getElementById('convertBtn').addEventListener('click', processText);
 
 document.getElementById('copyBtn').addEventListener('click', () => {
