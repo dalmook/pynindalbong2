@@ -9,8 +9,9 @@ const copyBtn = document.getElementById('copyBtn');
 let history = [];
 
 // 번역: Argos Open Tech LibreTranslate 사용 (무료, API 키 불필요, CORS 지원)
+// 번역: LibreTranslate 공식 무료 인스턴스 사용 (API 키 불필요, CORS 지원)
 async function translate(text) {
-  const res = await fetch('https://translate.argosopentech.com/translate', {
+  const res = await fetch('https://libretranslate.com/translate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ q: text, source: 'zh', target: 'ko', format: 'text' })
@@ -18,6 +19,9 @@ async function translate(text) {
   if (!res.ok) {
     throw new Error('번역 API 요청 실패: ' + res.status);
   }
+  const json = await res.json();
+  return json.translatedText;
+}
   const json = await res.json();
   return json.translatedText;
 }
