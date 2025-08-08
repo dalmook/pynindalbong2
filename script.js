@@ -6,32 +6,20 @@ const outputEl = document.getElementById('output');
 const historyEl = document.getElementById('historyList');
 const convertBtn = document.getElementById('convertBtn');
 const copyBtn = document.getElementById('copyBtn');
+
 let history = [];
 
-// 번역: Google Translate 비공식 gtx API + 사전 데이터 활용
-async function translate(text) {
-  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&dt=bd&q='
-    + encodeURIComponent(text);
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error('번역 API 요청 실패: ' + res.status);
+// 저장된 히스토리 불러오기
+function loadHistory() {
+  const saved = localStorage.getItem('history');
+  if (saved) {
+    history = JSON.parse(saved);
+    history.forEach(item => renderHistoryItem(item));
   }
-  const data = await res.json();
-  let translation = '';
-  // 사전 데이터: data[1] 배열
-  if (data[1] && data[1].length && data[1][0] && data[1][0][0]) {
-    translation = data[1][0][0][0];
-  }
-  // 기본 번역: data[0][0][0]
-  if (!translation && data[0] && data[0][0] && data[0][0][0]) {
-    translation = data[0][0][0];
-  }
-  return translation;
 }
 
-// 히스토리 추가
-function addHistory(input, formatted) {
-  history.push({ input, formatted });
+// 히스토리 렌더링
+function renderHistoryItem({ input, formatted }) {
   const li = document.createElement('li');
   li.textContent = input.length < 30 ? input : input.slice(0, 27) + '...';
   li.addEventListener('click', () => {
@@ -39,6 +27,30 @@ function addHistory(input, formatted) {
     outputEl.innerHTML = formatted;
   });
   historyEl.prepend(li);
+}
+
+// 히스토리 저장
+function saveHistory() {
+  localStorage.setItem('history', JSON.stringify(history));
+}
+
+// 번역: Google Translate 비공식 gtx API + 사전 데이터 활용
+async function translate(text) {
+  const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=zh-CN&tl=ko&dt=t&dt=bd&q=' +
+    encodeURIComponent(text);
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error('번역 API 요청 실패: ' + res.status);
+  }
+  const data = await res.json();
+  let translation = '';
+  if (data[1] && data[1].length && data[1][0] && data[1][0][0]) {
+    translation = data[1][0][0][0];
+  }
+  if (!translation && data[0] && data[0][0] && data[0][0][0]) {
+    translation = data[0][0][0];
+  }
+  return translation;
 }
 
 // 변환 처리
@@ -66,7 +78,11 @@ async function processText() {
             `<span class="meaning">[뜻] ${ko}</span></p>`;
   }
   outputEl.innerHTML = html;
-  addHistory(raw, html);
+  // 히스토리 추가 및 저장
+  const record = { input: raw, formatted: html };
+  history.unshift(record);
+  renderHistoryItem(record);
+  saveHistory();
 }
 
 // 이벤트 바인딩
@@ -75,3 +91,9 @@ copyBtn.addEventListener('click', () => {
   navigator.clipboard.writeText(outputEl.innerText);
   alert('결과를 클립보드에 복사했습니다.');
 });
+
+// 페이지 로드 시 히스토리 복원
+window.addEventListener('load', loadHistory);
+
+// 초기화
+loadHistory();
