@@ -94,6 +94,3 @@ copyBtn.addEventListener('click', () => {
 
 // 페이지 로드 시 히스토리 복원
 window.addEventListener('load', loadHistory);
-
-// 초기화
-loadHistory();
